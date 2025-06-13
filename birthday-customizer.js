@@ -121,7 +121,7 @@ class BirthdayCustomizer {
         this.config = { ...this.defaultConfig };
         this.audioPlayer = null;
         this.musicTracks = {
-            default: "music/happy-birthday.mp3",
+            default: "music/happy-birthday.MP3",
             party: "music/party-time.mp3",
             celebration: "music/celebration.mp3",
             ambient: "music/ambient-birthday.mp3",
