@@ -1,7 +1,7 @@
 body {
     text-align: center;
     font-family: 'Happy Monkey', cursive;
-    background: linear-gradient(#a2d2ff, #EFB0C9);
+    background: linear-gradient(#333333, #ffffff);
     color: #ffffff;
 }
 
@@ -60,6 +60,8 @@ h1, h2, h3, h4, p {
     border-radius: 10px;
     background-image: url("images/gift-cover.jpg");
     background-size: cover;
+    transition: background-image 0.3s ease;
+    position: relative;
 }
 
 #gift-img-happy:hover {
@@ -82,6 +84,38 @@ h1, h2, h3, h4, p {
     background-image: url("images/cheers.gif");
 }
 
+/* Add a visual indicator for mobile users */
+.gift-img::after {
+    content: "Tap to reveal!";
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.7);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 14px;
+    pointer-events: none;
+    display: none;
+}
+
+/* Add styling for open gifts */
+.gift-img[data-status="open"]::after {
+    content: "Tap to close";
+}
+
+@media (max-width: 768px) {
+    .gift-img::after {
+        display: block;
+    }
+    
+    /* Hide the hover hint on mobile */
+    .gift-hint {
+        display: none;
+    }
+}
+
 #footer {
     font-style: italic;
     width: 400px;
@@ -91,3 +125,25 @@ h1, h2, h3, h4, p {
 a {
     color: white;
 }
+
+.music-button {
+    margin-top: 15px;
+    padding: 8px 15px;
+    background: #EFB0C9;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-family: 'Happy Monkey', cursive;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+}
+
+.music-button:hover {
+    background: #e091b0;
+    transform: scale(1.05);
+}
+
+
+
+

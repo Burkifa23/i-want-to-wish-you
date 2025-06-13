@@ -1,6 +1,3 @@
-// Birthday Website Customizer
-// Add this script to your existing HTML file
-
 class BirthdayCustomizer {
     constructor() {
         this.themes = {
@@ -80,7 +77,7 @@ class BirthdayCustomizer {
             date: "date.month.year",
             imageUrl: "images/...",
             creator: "Frank",
-            theme: "original",
+            theme: "bw",
             music: {
                 enabled: true,
                 volume: 0.5,
@@ -121,7 +118,7 @@ class BirthdayCustomizer {
         this.config = { ...this.defaultConfig };
         this.audioPlayer = null;
         this.musicTracks = {
-            default: "music/happy-birthday.MP3",
+            default: "music/happy.MP3",
             party: "music/party-time.mp3",
             celebration: "music/celebration.mp3",
             ambient: "music/ambient-birthday.mp3",
@@ -628,6 +625,52 @@ class BirthdayCustomizer {
         document.getElementById("stop-music").addEventListener("click", () => {
             this.stopMusic();
         });
+
+        // Add music play button listener
+        const musicBtn = document.getElementById("play-music-btn");
+        if (musicBtn) {
+            musicBtn.addEventListener("click", () => {
+                this.playBirthdayMusic();
+                this.showMessage("Playing birthday music! 🎵");
+            });
+        }
+
+        // Implement lazy loading for gift images
+        this.setupLazyLoading();
+    }
+
+    setupLazyLoading() {
+        // Create IntersectionObserver for lazy loading
+        const lazyLoadObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const giftBox = entry.target;
+                    const giftKey = giftBox.dataset.giftKey;
+                    
+                    if (giftKey && this.config.gifts[giftKey]) {
+                        // Preload the GIF when the gift box comes into view
+                        const preloadImg = new Image();
+                        preloadImg.src = this.config.gifts[giftKey].imageUrl;
+                        
+                        // Remove from observation once loaded
+                        observer.unobserve(giftBox);
+                    }
+                }
+            });
+        }, {
+            rootMargin: '0px 0px 200px 0px' // Start loading when within 200px
+        });
+        
+        // Add data attributes to gift boxes and observe them
+        const giftBoxes = document.querySelectorAll('.gift-img');
+        const giftKeys = Object.keys(this.config.gifts);
+        
+        giftBoxes.forEach((box, index) => {
+            if (giftKeys[index]) {
+                box.dataset.giftKey = giftKeys[index];
+                lazyLoadObserver.observe(box);
+            }
+        });
     }
 
     applyChanges() {
@@ -724,6 +767,9 @@ class BirthdayCustomizer {
 
         // Update gifts
         this.updateGifts();
+
+        // Add tap functionality for gift images
+        this.setupGiftInteractions();
     }
 
     updateGifts() {
@@ -755,6 +801,64 @@ class BirthdayCustomizer {
 
                     newGiftImg.addEventListener("mouseleave", () => {
                         newGiftImg.style.backgroundImage = 'url("images/gift-cover.jpg")';
+                    });
+                }
+            }
+        });
+    }
+
+    setupGiftInteractions() {
+        const giftSections = document.querySelectorAll(".gift-section");
+        const giftKeys = Object.keys(this.config.gifts);
+        
+        giftSections.forEach((section, index) => {
+            if (giftKeys[index]) {
+                const giftKey = giftKeys[index];
+                const gift = this.config.gifts[giftKey];
+                const giftImg = section.querySelector(".gift-img");
+                
+                if (giftImg) {
+                    // Remove existing listeners
+                    const newGiftImg = giftImg.cloneNode(true);
+                    giftImg.parentNode.replaceChild(newGiftImg, giftImg);
+                    
+                    // Track if gift is revealed
+                    let isRevealed = false;
+                    
+                    // Add hover effect for desktop
+                    newGiftImg.addEventListener("mouseenter", () => {
+                        newGiftImg.style.backgroundImage = `url("${gift.imageUrl}")`;
+                        isRevealed = true;
+                    });
+                    
+                    newGiftImg.addEventListener("mouseleave", () => {
+                        newGiftImg.style.backgroundImage = 'url("images/gift-cover.jpg")';
+                        isRevealed = false;
+                    });
+                    
+                    // Add click/tap effect for mobile
+                    newGiftImg.addEventListener("click", () => {
+                        if (!isRevealed) {
+                            newGiftImg.style.backgroundImage = `url("${gift.imageUrl}")`;
+                            isRevealed = true;
+                            
+                            // Add "tap to close" text
+                            newGiftImg.setAttribute("data-status", "open");
+                            
+                            // Auto-close after 3 seconds on mobile
+                            if (window.innerWidth <= 768) {
+                                setTimeout(() => {
+                                    newGiftImg.style.backgroundImage = 'url("images/gift-cover.jpg")';
+                                    isRevealed = false;
+                                    newGiftImg.removeAttribute("data-status");
+                                }, 3000);
+                            }
+                        } else {
+                            // Close on second tap
+                            newGiftImg.style.backgroundImage = 'url("images/gift-cover.jpg")';
+                            isRevealed = false;
+                            newGiftImg.removeAttribute("data-status");
+                        }
                     });
                 }
             }
