@@ -75,10 +75,10 @@ class BirthdayCustomizer {
         };
 
         this.defaultConfig = {
-            name: "Nick",
-            age: 24,
-            date: "01.11.2022",
-            imageUrl: "images/nick.jpg",
+            name: "name",
+            age: 22,
+            date: "date.month.year",
+            imageUrl: "images/...",
             creator: "Frank",
             theme: "original",
             music: {
