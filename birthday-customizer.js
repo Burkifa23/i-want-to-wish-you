@@ -1,6 +1,3 @@
-// Birthday Website Customizer
-// Add this script to your existing HTML file
-
 class BirthdayCustomizer {
     constructor() {
         this.themes = {
@@ -46,11 +43,24 @@ class BirthdayCustomizer {
                 borderColor: '#e74c3c',
                 textColor: '#ffffff'
             },
+            bw: {
+                    "background": "linear-gradient(to bottom, #000000, #111111)",
+                    "accentColor": "#ffffff",
+                    "borderColor": "#333333",
+                    "textColor": "#ffffff"
+                    },
             white: {
                 background: 'linear-gradient(#f8f9fa, #e9ecef)',
                 accentColor: '#6c757d',
                 borderColor: '#e74c3c',
                 textColor: '#212529'
+            },
+            liquidglass: {
+                background: 'radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.3) 50%, rgba(255, 255, 255, 0.1) 100%), linear-gradient(135deg, rgba(147, 112, 219, 0.6) 0%, rgba(138, 43, 226, 0.5) 25%, rgba(72, 61, 139, 0.4) 50%, rgba(25, 25, 112, 0.6) 75%, rgba(0, 0, 139, 0.7) 100%)',
+                accentColor: 'rgba(255, 255, 255, 0.25)',
+                borderColor: 'rgba(255, 255, 255, 0.4)',
+                textColor: '#ffffff',
+                special: 'liquidglass'
             },
             custom: {
                 background: '',
@@ -539,7 +549,14 @@ class BirthdayCustomizer {
         // Update body background
         document.body.style.background = currentTheme.background;
         
-        // Update text color for white theme
+        // Apply liquid glass effects if it's the liquid glass theme
+        if (themeName === 'liquidglass') {
+            this.applyLiquidGlassEffects();
+        } else {
+            this.removeLiquidGlassEffects();
+        }
+        
+        // Update text color
         document.body.style.color = currentTheme.textColor;
         
         // Update all text elements for proper contrast
@@ -560,8 +577,19 @@ class BirthdayCustomizer {
             if (element) {
                 if (selector === '#bff-img') {
                     element.style.borderColor = currentTheme.borderColor;
+                    if (themeName === 'liquidglass') {
+                        element.style.backdropFilter = 'blur(10px) saturate(200%)';
+                        element.style.border = '2px solid rgba(255, 255, 255, 0.3)';
+                        element.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.2), inset 0 0 0 1px rgba(255, 255, 255, 0.2)';
+                    }
                 } else {
                     element.style.backgroundColor = currentTheme.accentColor;
+                    if (themeName === 'liquidglass') {
+                        element.style.backdropFilter = 'blur(20px) saturate(200%)';
+                        element.style.background = 'rgba(255, 255, 255, 0.15)';
+                        element.style.border = '1px solid rgba(255, 255, 255, 0.2)';
+                        element.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.1), inset 0 0 0 1px rgba(255, 255, 255, 0.1)';
+                    }
                     // For white theme, ensure text is readable on accent background
                     if (themeName === 'white') {
                         element.style.color = '#ffffff';
@@ -577,6 +605,8 @@ class BirthdayCustomizer {
                 element.style.textShadow = '0 0 1px rgba(0,0,0,0.3)';
             } else if (themeName === 'black') {
                 element.style.textShadow = '0 0 2px rgba(255,255,255,0.3)';
+            } else if (themeName === 'liquidglass') {
+                element.style.textShadow = '0 2px 10px rgba(0,0,0,0.3), 0 0 20px rgba(255,255,255,0.1)';
             } else {
                 element.style.textShadow = '0 0 1px black';
             }
@@ -585,14 +615,27 @@ class BirthdayCustomizer {
         // Update gift box borders for theme consistency
         const giftImages = document.querySelectorAll('.gift-img');
         giftImages.forEach(img => {
-            if (themeName === 'black') {
+            if (themeName === 'liquidglass') {
+                img.style.border = '2px solid rgba(255, 255, 255, 0.2)';
+                img.style.backdropFilter = 'blur(15px) saturate(150%)';
+                img.style.background = 'rgba(255, 255, 255, 0.1)';
+                img.style.boxShadow = '0 12px 40px rgba(0, 0, 0, 0.15), inset 0 0 0 1px rgba(255, 255, 255, 0.15)';
+            } else if (themeName === 'black') {
                 img.style.borderColor = '#ffffff';
+                img.style.backdropFilter = 'none';
+                img.style.boxShadow = 'none';
             } else if (themeName === 'white') {
                 img.style.borderColor = '#212529';
+                img.style.backdropFilter = 'none';
+                img.style.boxShadow = 'none';
             } else if (themeName === 'custom') {
                 img.style.borderColor = currentTheme.borderColor;
+                img.style.backdropFilter = 'none';
+                img.style.boxShadow = 'none';
             } else {
                 img.style.borderColor = 'white';
+                img.style.backdropFilter = 'none';
+                img.style.boxShadow = 'none';
             }
         });
     }
@@ -712,7 +755,190 @@ class BirthdayCustomizer {
     }
     
     formatThemeName(theme) {
-        return theme.charAt(0).toUpperCase() + theme.slice(1);
+        const names = {
+            liquidglass: 'Liquid Glass ✨',
+            original: 'Original',
+            sunset: 'Sunset',
+            ocean: 'Ocean', 
+            forest: 'Forest',
+            lavender: 'Lavender',
+            coral: 'Coral',
+            black: 'Black',
+            bw: 'Black & White',
+            white: 'White',
+            custom: 'Custom'
+        };
+        return names[theme] || theme.charAt(0).toUpperCase() + theme.slice(1);
+    }
+    
+    applyLiquidGlassEffects() {
+        // Add dynamic liquid glass styles
+        if (!document.getElementById('liquid-glass-styles')) {
+            const liquidStyles = document.createElement('style');
+            liquidStyles.id = 'liquid-glass-styles';
+            liquidStyles.textContent = `
+                .gift-section {
+                    background: rgba(255, 255, 255, 0.08) !important;
+                    backdrop-filter: blur(25px) saturate(200%) !important;
+                    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+                    border-radius: 25px !important;
+                    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1), 
+                                inset 0 0 0 1px rgba(255, 255, 255, 0.1),
+                                0 0 80px rgba(147, 112, 219, 0.1) !important;
+                    position: relative !important;
+                    overflow: hidden !important;
+                }
+                
+                .gift-section::before {
+                    content: '';
+                    position: absolute;
+                    top: -50%;
+                    left: -50%;
+                    width: 200%;
+                    height: 200%;
+                    background: radial-gradient(circle, rgba(255, 255, 255, 0.03) 0%, transparent 70%);
+                    animation: liquidFloat 20s ease-in-out infinite;
+                    pointer-events: none;
+                }
+                
+                .gift-section::after {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 50%, rgba(255, 255, 255, 0.05) 100%);
+                    pointer-events: none;
+                }
+                
+                @keyframes liquidFloat {
+                    0%, 100% { transform: translate(-10%, -10%) rotate(0deg); }
+                    25% { transform: translate(-15%, -5%) rotate(1deg); }
+                    50% { transform: translate(-5%, -15%) rotate(-1deg); }
+                    75% { transform: translate(-12%, -8%) rotate(0.5deg); }
+                }
+                
+                #header {
+                    background: rgba(255, 255, 255, 0.06) !important;
+                    backdrop-filter: blur(30px) saturate(200%) !important;
+                    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+                    border-radius: 30px !important;
+                    padding: 30px !important;
+                    box-shadow: 0 25px 70px rgba(0, 0, 0, 0.15), 
+                                inset 0 0 0 1px rgba(255, 255, 255, 0.1),
+                                0 0 100px rgba(138, 43, 226, 0.15) !important;
+                    margin-bottom: 50px !important;
+                    position: relative !important;
+                    overflow: hidden !important;
+                }
+                
+                #header::before {
+                    content: '';
+                    position: absolute;
+                    top: -20px;
+                    left: -20px;
+                    right: -20px;
+                    bottom: -20px;
+                    background: radial-gradient(circle at 70% 20%, rgba(255, 255, 255, 0.04) 0%, transparent 50%);
+                    animation: headerGlow 15s ease-in-out infinite alternate;
+                    pointer-events: none;
+                }
+                
+                @keyframes headerGlow {
+                    0% { opacity: 0.5; transform: scale(1); }
+                    100% { opacity: 1; transform: scale(1.02); }
+                }
+                
+                footer {
+                    background: rgba(255, 255, 255, 0.05) !important;
+                    backdrop-filter: blur(20px) saturate(180%) !important;
+                    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+                    border-radius: 20px !important;
+                    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.1), 
+                                inset 0 0 0 1px rgba(255, 255, 255, 0.08) !important;
+                }
+                
+                .gift-img {
+                    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+                }
+                
+                .gift-img:hover {
+                    transform: translateY(-8px) scale(1.02) !important;
+                    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.2), 
+                                inset 0 0 0 1px rgba(255, 255, 255, 0.2),
+                                0 0 40px rgba(147, 112, 219, 0.3) !important;
+                }
+                
+                body {
+                    position: relative !important;
+                    overflow-x: hidden !important;
+                }
+                
+                body::before {
+                    content: '';
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: radial-gradient(circle at 20% 80%, rgba(147, 112, 219, 0.05) 0%, transparent 50%),
+                                radial-gradient(circle at 80% 20%, rgba(138, 43, 226, 0.05) 0%, transparent 50%),
+                                radial-gradient(circle at 40% 40%, rgba(72, 61, 139, 0.03) 0%, transparent 50%);
+                    animation: ambientGlow 30s ease-in-out infinite alternate;
+                    pointer-events: none;
+                    z-index: -1;
+                }
+                
+                @keyframes ambientGlow {
+                    0% { opacity: 0.3; }
+                    100% { opacity: 0.7; }
+                }
+            `;
+            document.head.appendChild(liquidStyles);
+        }
+    }
+    
+    removeLiquidGlassEffects() {
+        const liquidStyles = document.getElementById('liquid-glass-styles');
+        if (liquidStyles) {
+            liquidStyles.remove();
+        }
+        
+        // Reset gift sections to original styles
+        const giftSections = document.querySelectorAll('.gift-section');
+        giftSections.forEach(section => {
+            section.style.background = '';
+            section.style.backdropFilter = '';
+            section.style.border = '';
+            section.style.borderRadius = '';
+            section.style.boxShadow = '';
+            section.style.position = '';
+            section.style.overflow = '';
+        });
+        
+        // Reset header
+        const header = document.getElementById('header');
+        if (header) {
+            header.style.background = '';
+            header.style.backdropFilter = '';
+            header.style.border = '';
+            header.style.borderRadius = '';
+            header.style.padding = '';
+            header.style.boxShadow = '';
+            header.style.position = '';
+            header.style.overflow = '';
+        }
+        
+        // Reset footer
+        const footer = document.querySelector('footer');
+        if (footer) {
+            footer.style.background = '';
+            footer.style.backdropFilter = '';
+            footer.style.border = '';
+            footer.style.borderRadius = '';
+            footer.style.boxShadow = '';
+        }
     }
     
     showMessage(message) {
