@@ -1,19 +1,26 @@
-# Getting Started
-Install the dependencies and run the project
-```
-npm install
-npm start
-```
+# I Want To Wish You A Happy Birthday 
 
-Head over to https://vitejs.dev/ to learn more about configuring vite
-## About Scrimba
+This is a simple birthday website that I created for my friend Kevin. I used HTML, CSS, and JavaScript to create this website. I also used some images and gifs that I found on the internet. I hope you like it!
 
-At Scrimba our goal is to create the best possible coding school at the cost of a gym membership! 💜
-If we succeed with this, it will give anyone who wants to become a software developer a realistic shot at succeeding, regardless of where they live and the size of their wallets 🎉
-The Frontend Developer Career Path aims to teach you everything you need to become a Junior Developer, or you could take a deep-dive with one of our advanced courses 🚀
+## How To Use
 
-- [Our courses](https://scrimba.com/allcourses)
-- [The Frontend Career Path](https://scrimba.com/learn/frontend)
-- [Become a Scrimba Pro member](https://scrimba.com/pricing)
+1. Clone this repository to your local machine.
+2. Open the `index.html` file in your browser.
+3. Customize the website to your liking by using the customizer panel.
+4. Export the configuration to share with your friends.
+5. Import the configuration on their end to see the changes.
 
-Happy Coding!
+## Customization Options
+
+The customizer panel allows you to customize the following aspects of the website:
+
+- Birthday Person's Name
+- Age
+- Date
+- Photo URL
+- Your Name (Creator)
+- Theme
+- Custom Colors
+- Birthday Music
+- Gift Messages & Images
+
